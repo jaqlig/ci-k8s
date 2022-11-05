@@ -1,0 +1,7 @@
+ssh_private_key: <SSH key>
+
+node1_ip: <ip> # public IP address of k3s control plain
+node2_ip: <ip> # public IP address of node2
+node3_ip: <ip> # public IP address of node3
+
+cluster_dns: <DNS of server node>

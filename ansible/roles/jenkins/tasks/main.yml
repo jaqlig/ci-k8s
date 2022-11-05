@@ -1,0 +1,12 @@
+---
+- name: Create Jenkins container
+  docker_container:
+    name: jenkins
+    image: jenkins/jenkins
+    volumes:
+      - /home/jakub/jenkins-data:/var/jenkins_home
+    ports:
+      - "8080:8080"
+    env:
+      JAVA_OPTS: -Djenkins.install.runSetupWizard=false
+      JENKINS_OPTS: --argumentsRealm.roles.user=admin --argumentsRealm.passwd.admin=admin --argumentsRealm.roles.admin=admin

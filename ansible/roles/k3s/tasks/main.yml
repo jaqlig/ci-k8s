@@ -1,0 +1,63 @@
+- name: Read latest kubectl version
+  ansible.builtin.shell: curl -L -s https://dl.k8s.io/release/stable.txt
+  register: kubectl_version
+
+- name: Download kubectl checksum file
+  ansible.builtin.get_url:
+    url: "https://dl.k8s.io/{{ kubectl_version.stdout }}/bin/linux/amd64/kubectl.sha256"
+    dest: ~/kubectl.sha256
+
+- name: Read kubectl checksum
+  ansible.builtin.shell: cat ~/kubectl.sha256
+  register: kubectl_checksum
+
+- name: Download kubectl
+  ansible.builtin.get_url:
+    url: "https://dl.k8s.io/release/{{ kubectl_version.stdout }}/bin/linux/amd64/kubectl"
+    dest: ~/kubectl
+    checksum: "sha256: {{ kubectl_checksum.stdout }}"
+
+- name: Download k3sup
+  ansible.builtin.shell: curl -sLS https://get.k3sup.dev | sh
+
+- name: Setup server node
+  ansible.builtin.shell: k3sup install --ip {{ node1_ip }} --user ubuntu --ssh-key ~/{{ ssh_private_key }}
+
+- name: Export kubeconfig
+  ansible.builtin.shell: export KUBECONFIG=./kubeconfig
+
+- name: Setup server node
+  ansible.builtin.shell: k3sup join --ip {{ node2_ip }} --server-ip {{ node1_ip }} --user ubuntu --ssh-key ~/{{ ssh_private_key }}
+
+- name: Download example nginx deployment
+  ansible.builtin.get_url:
+    url: https://k8s.io/examples/controllers/nginx-deployment.yaml
+    dest: ~/nginx-deployment.yaml
+    mode: '0664'
+
+- name: Run example nginx deployment
+  kubernetes.core.k8s:
+    state: present
+    src: ~/nginx-deployment.yaml
+    namespace: default
+
+# - name: Expose nginx Service object # TODO
+#   kubernetes.core.k8s_service:
+#     type: ClusterIP
+#     state: present
+#     name: nginx-deployment
+#     namespace: default
+
+- name: Expose nginx Service # temporary workaround
+  ansible.builtin.shell: kubectl expose deployment nginx-deployment
+
+- name: Copy ingress config
+  template:
+    src: ingress.yml.j2
+    dest: ~/ingress.yml
+
+- name: Set up ingress
+  kubernetes.core.k8s:
+    state: present
+    src: ~/ingress.yml
+    namespace: default
