@@ -1,5 +1,5 @@
 ---
 - hosts: localhost
   roles:
-    - role: k3s
+    - role: k3s_deploy
   

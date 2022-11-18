@@ -1,0 +1,34 @@
+- name: Export kubeconfig
+  ansible.builtin.shell: export KUBECONFIG=./kubeconfig
+
+- name: Copy deployment template
+  template:
+    src: node-backend.yml.j2
+    dest: ~/node-backend.yml
+
+- name: Run example node-backend deployment
+  kubernetes.core.k8s:
+    state: present
+    src: ~/node-backend.yml
+    namespace: default
+
+# - name: Expose node-backend Service object # TODO
+#   kubernetes.core.k8s_service:
+#     type: ClusterIP
+#     state: present
+#     name: node-backend-deployment
+#     namespace: default
+
+- name: Expose node-backend service # temporary workaround
+  ansible.builtin.shell: kubectl expose deployment node-backend
+
+- name: Copy ingress config
+  template:
+    src: ingress.yml.j2
+    dest: ~/ingress.yml
+
+- name: Set up ingress
+  kubernetes.core.k8s:
+    state: present
+    src: ~/ingress.yml
+    namespace: default

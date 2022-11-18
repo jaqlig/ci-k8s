@@ -12,13 +12,13 @@ spec:
             pathType: Exact
             backend:
               service:
-                name: nginx-deployment
+                name: node-backend
                 port:
                   number: 80
           - path: /bar
             pathType: Exact
             backend:
               service:
-                name: nginx-deployment
+                name: node-backend
                 port:
                   number: 80
