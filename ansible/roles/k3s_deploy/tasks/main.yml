@@ -1,5 +1,5 @@
 - name: Export kubeconfig
-  ansible.builtin.shell: export KUBECONFIG=./kubeconfig
+  ansible.builtin.shell: export KUBECONFIG=~/kubeconfig
 
 - name: Copy deployment template
   template:

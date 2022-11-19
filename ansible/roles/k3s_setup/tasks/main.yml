@@ -23,8 +23,11 @@
 - name: Setup server node
   ansible.builtin.shell: k3sup install --ip {{ node1_ip }} --user ubuntu --ssh-key ~/{{ ssh_private_key }}
 
+- name: Copy kubeconfig to ~
+  ansible.builtin.shell: cp ./kubeconfig ~/
+
 - name: Export kubeconfig
-  ansible.builtin.shell: export KUBECONFIG=./kubeconfig
+  ansible.builtin.shell: export KUBECONFIG=~/kubeconfig
 
 - name: Setup server node
   ansible.builtin.shell: k3sup join --ip {{ node2_ip }} --server-ip {{ node1_ip }} --user ubuntu --ssh-key ~/{{ ssh_private_key }}
