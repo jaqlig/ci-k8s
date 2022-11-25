@@ -29,5 +29,8 @@
 - name: Export kubeconfig
   ansible.builtin.shell: export KUBECONFIG=~/kubeconfig
 
-- name: Setup server node
+- name: Setup worker 1
   ansible.builtin.shell: k3sup join --ip {{ node2_ip }} --server-ip {{ node1_ip }} --user ubuntu --ssh-key ~/{{ ssh_private_key }}
+
+- name: Setup worker 2
+  ansible.builtin.shell: k3sup join --ip {{ node3_ip }} --server-ip {{ node1_ip }} --user ubuntu --ssh-key ~/{{ ssh_private_key }}

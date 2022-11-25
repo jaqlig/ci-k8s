@@ -18,7 +18,7 @@ pipeline {
             steps {
                  sh '''#!/bin/bash
                         cd ansible/
-                        ansible-playbook -i inventories/production -e "node1_ip=${node1_ip} node2_ip=${node2_ip} ssh_private_key=${ssh_private_key}" k3s_setup.yml
+                        ansible-playbook -i inventories/production -e "node1_ip=${node1_ip} node2_ip=${node2_ip} node3_ip=${node3_ip} ssh_private_key=${ssh_private_key}" k3s_setup.yml
                  '''
             }
         }
