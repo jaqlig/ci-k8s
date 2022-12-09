@@ -52,7 +52,11 @@ pipeline {
         }
         stage('Run deployment with Ansible') {
             steps {
-                 sh 'ansible-playbook -i inventories/production -e "cluster_dns=${cluster_dns} image=${image} version=${version}" k3s_deploy.yml'
+                 sh '''#!/bin/bash
+                        cd ansible/
+                        export KUBECONFIG=~/kubeconfig
+                        ansible-playbook -e "cluster_dns=${cluster_dns} image=${image} version=${version}" k3s_deploy.yml
+                 '''
             }
         }
     }
