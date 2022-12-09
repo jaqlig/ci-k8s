@@ -12,15 +12,13 @@
     src: ~/node-backend.yml
     namespace: default
 
-# - name: Expose node-backend Service object # TODO
-#   kubernetes.core.k8s_service:
-#     type: ClusterIP
-#     state: present
-#     name: node-backend-deployment
-#     namespace: default
+- name: Expose node-backend service
+  ansible.builtin.shell: kubectl delete svc node-backend
+  ignore_errors: true
 
-- name: Expose node-backend service # temporary workaround
+- name: Expose node-backend service
   ansible.builtin.shell: kubectl expose deployment node-backend
+  ignore_errors: true
 
 - name: Copy ingress config
   template:

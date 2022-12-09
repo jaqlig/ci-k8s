@@ -52,7 +52,7 @@ pipeline {
         }
         stage('Run deployment with Ansible') {
             steps {
-                 sh 'ansible-playbook -i inventories/production -e "node1_ip=${node1_ip} node2_ip=${node2_ip} cluster_dns=${cluster_dns} image=${image} version=${version}" k3s_deploy.yml'
+                 sh 'ansible-playbook -i inventories/production -e "cluster_dns=${cluster_dns} image=${image} version=${version}" k3s_deploy.yml'
             }
         }
     }
